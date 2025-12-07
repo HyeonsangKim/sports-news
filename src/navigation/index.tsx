@@ -37,7 +37,7 @@ const RootNavigator = () => {
   // TODO: 인증 상태 확인 (나중에 로그인 될떄 추가좀 zustand 사용해서 맘대로 바꾸셈)
   // const { isAuthenticated, isLoading } = useAuth();
   // TODO: 인증 상태 확인 (나중에 로그인 될떄 저위에껄로 바꿔야함) true로 하면 홈으로 들어갈수있음 false로 바꾸면 로그인
-  const isAuthenticated = true;
+  const isAuthenticated = false;
   // if (isLoading) {
   //   return (
   //     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
