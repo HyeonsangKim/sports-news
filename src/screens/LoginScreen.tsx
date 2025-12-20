@@ -3,19 +3,21 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   StyleSheet,
-  KeyboardAvoidingView,
-  Platform,
   ScrollView,
+  Image,
+  TouchableOpacity,
 } from 'react-native';
 import SocialLoginButton from '../components/SocialLoginButton';
 import Apple from '../../assets/icons/apple.svg';
 import Google from '../../assets/icons/google.svg';
 import Kakao from '../../assets/icons/kakao.svg';
 import { fp, hp, wp } from '../utils/reponsive';
+import SquadRoomIcon from '../../assets/images/squadroom-icon.png';
+import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
+  const navigation = useNavigation();
   const handleAppleLogin = async () => {
     console.log('Apple 로그인');
     // TODO: Apple 로그인 로직
@@ -36,6 +38,10 @@ const LoginScreen = () => {
     // TODO: 네이버 로그인 로직
   };
 
+  const handleEmailSignup = async () => {
+    navigation.navigate('SignupScreen');
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -44,29 +50,46 @@ const LoginScreen = () => {
       >
         <View style={styles.inner}>
           {/* 로고/타이틀 */}
-          <View style={styles.logoContainer}>
-            <Text style={styles.title}>로그인</Text>
+          <View style={styles.mainIconContainer}>
+            <Image
+              source={SquadRoomIcon}
+              style={styles.mainIcon}
+              resizeMode="contain"
+            />
           </View>
-
           {/* 소셜 로그인 버튼들 */}
-          <View style={styles.socialButtonsContainer}>
-            <SocialLoginButton
-              type="apple"
-              onPress={handleAppleLogin}
-              icon={<Apple />}
-            />
+          <View style={styles.loginContainer}>
+            <View style={styles.socialButtonsContainer}>
+              <SocialLoginButton
+                type="apple"
+                onPress={handleAppleLogin}
+                icon={<Apple />}
+              />
 
-            <SocialLoginButton
-              type="google"
-              onPress={handleGoogleLogin}
-              icon={<Google />}
-            />
+              <SocialLoginButton
+                type="google"
+                onPress={handleGoogleLogin}
+                icon={<Google />}
+              />
 
-            <SocialLoginButton
-              type="kakao"
-              onPress={handleKakaoLogin}
-              icon={<Kakao />}
-            />
+              <SocialLoginButton
+                type="kakao"
+                onPress={handleKakaoLogin}
+                icon={<Kakao />}
+              />
+            </View>
+
+            <View style={styles.emailAccountContainer}>
+              <TouchableOpacity onPress={handleEmailSignup}>
+                <Text>이메일 회원가입</Text>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text>이메일 로그인</Text>
+              </TouchableOpacity>
+              <TouchableOpacity>
+                <Text>계정 찾기</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
       </ScrollView>
@@ -79,30 +102,29 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  mainIconContainer: {
+    alignItems: 'center',
+    paddingTop: hp(160),
+  },
+  loginContainer: {
+    marginTop: hp(80),
+  },
+  mainIcon: {
+    width: wp(313),
+    height: hp(66),
+  },
   scrollContent: {
     flexGrow: 1,
   },
   inner: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-around',
     paddingHorizontal: wp(20),
-  },
-  logoContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: fp(32),
-    fontWeight: 'bold',
-    marginBottom: hp(8),
-    textAlign: 'center',
-    color: '#000',
   },
 
   // 소셜 로그인 버튼
   socialButtonsContainer: {
-    paddingBottom: hp(50),
+    paddingBottom: hp(0),
   },
 
   // 카카오 아이콘 (임시)
@@ -162,6 +184,13 @@ const styles = StyleSheet.create({
     marginBottom: hp(16),
     fontSize: fp(16),
     color: '#000',
+  },
+
+  emailAccountContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: hp(15),
+    paddingHorizontal: wp(20),
   },
 });
 

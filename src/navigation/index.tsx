@@ -6,6 +6,7 @@ import HomeScreen from '../screens/HomeScreen';
 import LoginScreen from '../screens/LoginScreen';
 import { ActivityIndicator, View } from 'react-native';
 import MainTabNavigator from './MainTabNavigator';
+import SignupScreen from '../screens/SingupScreen';
 
 export type RootStackParamList = {
   Auth: undefined;
@@ -14,7 +15,7 @@ export type RootStackParamList = {
 
 export type AuthStackParamList = {
   LoginScreen: undefined;
-  Signup: undefined;
+  SignupScreen: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -29,6 +30,7 @@ const AuthNavigator = () => {
       }}
     >
       <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
+      <AuthStack.Screen name="SignupScreen" component={SignupScreen} />
     </AuthStack.Navigator>
   );
 };

@@ -1,113 +1,74 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
+// src/store/useAuthStore.ts
 import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface User {
   id: string;
   email: string;
   name: string;
   profileImage?: string;
-  provider: 'google' | 'apple' | 'kakao';
+  provider: 'email' | 'google' | 'apple' | 'kakao'; // email 추가
 }
 
 interface AuthStore {
   isAuthenticated: boolean;
-  isLoading: boolean;
   accessToken: string | null;
   refreshToken: string | null;
   user: User | null;
 
+  // 액션들
   login: (
     tokens: { accessToken: string; refreshToken: string },
     user: User
-  ) => Promise<void>;
-  logout: () => Promise<void>;
-  checkAuth: () => Promise<void>;
-  setLoading: (loading: boolean) => void;
+  ) => void;
+  setTokens: (accessToken: string, refreshToken: string) => void; // 토큰 갱신용
+  logout: () => void;
+  updateUser: (user: Partial<User>) => void; // 프로필 수정 등
 }
 
-const TOKEN_KEY = '@auth_tokens';
-const REFRESH_TOKEN_KEY = '@refresh_token';
-const USER_KEY = '@user';
+export const useAuthStore = create<AuthStore>()(
+  persist(
+    (set) => ({
+      isAuthenticated: false,
+      accessToken: null,
+      refreshToken: null,
+      user: null,
 
-export const useAuthStore = create<AuthStore>((set) => ({
-  isAuthenticated: false,
-  isLoading: true,
-  accessToken: null,
-  refreshToken: null,
-  user: null,
-
-  // 로그인 함수
-  login: async (tokens, user) => {
-    try {
-      await AsyncStorage.multiSet([
-        [TOKEN_KEY, tokens.accessToken],
-        [REFRESH_TOKEN_KEY, tokens.refreshToken],
-        [USER_KEY, JSON.stringify(user)],
-      ]);
-
-      set({
-        isAuthenticated: true,
-        accessToken: tokens.accessToken,
-        refreshToken: tokens.refreshToken,
-        user: user,
-        isLoading: false,
-      });
-
-      console.log('로그인 성공', user.email);
-    } catch (error) {
-      console.error('로그인 실패', error);
-      throw error;
-    }
-  },
-
-  // 로그아웃 함수
-  logout: async () => {
-    try {
-      await AsyncStorage.multiRemove([TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY]);
-
-      set({
-        isAuthenticated: false,
-        accessToken: null,
-        refreshToken: null,
-        user: null,
-      });
-
-      console.log('로그아웃 성공');
-    } catch (error) {
-      console.error('로그아웃 실패', error);
-      throw error;
-    }
-  },
-
-  // 앱 시작 시 자동 로그인 체크
-  checkAuth: async () => {
-    try {
-      // AsyncStorage에서 데이터 읽기
-      const [[, accessToken], [, refreshToken], [, userStr]] =
-        await AsyncStorage.multiGet([TOKEN_KEY, REFRESH_TOKEN_KEY, USER_KEY]);
-
-      if (accessToken && refreshToken && userStr) {
-        const user = JSON.parse(userStr) as User;
-
+      // 로그인: 상태만 바꾸면 persist가 알아서 저장함
+      login: (tokens, user) => {
         set({
           isAuthenticated: true,
-          accessToken,
-          refreshToken,
+          accessToken: tokens.accessToken,
+          refreshToken: tokens.refreshToken,
           user,
-          isLoading: false,
         });
+      },
 
-        console.log('자동 로그인 성공', user.email);
-      } else {
-        set({ isLoading: false });
-        console.log('저장된 로그인 정보 없음');
-      }
-    } catch (error) {
-      console.error('인증 체크 실패', error);
-      set({ isLoading: false });
+      // 토큰 갱신 (Axios Interceptor에서 사용)
+      setTokens: (accessToken, refreshToken) => {
+        set({ accessToken, refreshToken });
+      },
+
+      // 로그아웃: 상태 초기화
+      logout: () => {
+        set({
+          isAuthenticated: false,
+          accessToken: null,
+          refreshToken: null,
+          user: null,
+        });
+      },
+
+      // 유저 정보 업데이트 유틸
+      updateUser: (updatedUser) =>
+        set((state) => ({
+          user: state.user ? { ...state.user, ...updatedUser } : null,
+        })),
+    }),
+    {
+      name: 'auth-storage', // AsyncStorage 키 이름
+      storage: createJSONStorage(() => AsyncStorage),
     }
-  },
-
-  // 로딩 상태 변경
-  setLoading: (loading: boolean) => set({ isLoading: loading }),
-}));
+  )
+);
