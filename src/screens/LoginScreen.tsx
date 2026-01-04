@@ -39,7 +39,11 @@ const LoginScreen = () => {
   };
 
   const handleEmailSignup = async () => {
-    navigation.navigate('SignupScreen');
+    navigation.navigate('SignupScreen' as never);
+  };
+
+  const handleEmailLogin = async () => {
+    navigation.navigate('EmailLoginScreen' as never);
   };
 
   return (
@@ -83,7 +87,7 @@ const LoginScreen = () => {
               <TouchableOpacity onPress={handleEmailSignup}>
                 <Text>이메일 회원가입</Text>
               </TouchableOpacity>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handleEmailLogin}>
                 <Text>이메일 로그인</Text>
               </TouchableOpacity>
               <TouchableOpacity>
