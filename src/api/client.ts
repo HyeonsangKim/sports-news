@@ -1,8 +1,8 @@
 import axios from 'axios';
+import Config from 'react-native-config';
 import { useAuthStore } from '../store/authStore';
 
-const BASE_URL = 'http://YOUR_BACKEND_URL/api'; // 백엔드 주소
-
+const BASE_URL = Config.API_URL;
 const client = axios.create({
   baseURL: BASE_URL,
   headers: { 'Content-Type': 'application/json' },
