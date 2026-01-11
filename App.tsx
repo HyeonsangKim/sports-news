@@ -6,12 +6,10 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { enableScreens } from 'react-native-screens';
 import RootNavigator from './src/navigation';
 import { StatusBar } from 'react-native';
+import queryClient from './src/api/queryClient';
 
 // React Native Screens 최적화 활성화
 enableScreens();
-
-// React Query 클라이언트 생성
-const queryClient = new QueryClient();
 
 function App(): React.JSX.Element {
   return (

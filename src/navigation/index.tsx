@@ -8,6 +8,7 @@ import { ActivityIndicator, View } from 'react-native';
 import MainTabNavigator from './MainTabNavigator';
 import SignupScreen from '../screens/SingupScreen';
 import EmailLoginScreen from '../screens/EmailLoginScreen';
+import KakaoLoginScreen from '../screens/auth/KakaoLoginScreen';
 
 export type RootStackParamList = {
   Auth: undefined;
@@ -18,6 +19,7 @@ export type AuthStackParamList = {
   LoginScreen: undefined;
   SignupScreen: undefined;
   EmailLoginScreen: undefined;
+  KakaoLoginScreen: undefined;
 };
 
 const RootStack = createNativeStackNavigator<RootStackParamList>();
@@ -29,11 +31,21 @@ const AuthNavigator = () => {
     <AuthStack.Navigator
       screenOptions={{
         headerShown: false,
+        headerBackButtonDisplayMode: 'minimal',
+        headerTintColor: '#000',
       }}
     >
       <AuthStack.Screen name="LoginScreen" component={LoginScreen} />
       <AuthStack.Screen name="SignupScreen" component={SignupScreen} />
       <AuthStack.Screen name="EmailLoginScreen" component={EmailLoginScreen} />
+      <AuthStack.Screen
+        name="KakaoLoginScreen"
+        component={KakaoLoginScreen}
+        options={{
+          headerShown: true,
+          title: '카카오 로그인',
+        }}
+      />
     </AuthStack.Navigator>
   );
 };

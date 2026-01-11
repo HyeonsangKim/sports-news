@@ -6,6 +6,7 @@ import type {
   EmailVerifyData,
   RegisterData,
   LoginData,
+  KakaoLoginData,
 } from '../types/api';
 
 // 회원가입 요청 데이터 타입 정의
@@ -63,6 +64,17 @@ export const authApi = {
       email,
       password,
     });
+    return response.data;
+  },
+
+  // 5. 카카오 로그인
+  // TODO: 스웨거에 아직 카카오 로그인 api는 추가 되지 않음.
+  // 추후 변경이 필요 할 수 있음.
+  kakaoLogin: async (token: string): Promise<ApiResponse<KakaoLoginData>> => {
+    const response = await client.post('/auth/kakao', {
+      idToken: token,
+    });
+
     return response.data;
   },
 };

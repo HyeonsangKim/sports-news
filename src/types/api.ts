@@ -33,13 +33,23 @@ export interface RegisterData {
   };
 }
 
+export type User = {
+  id: string;
+  email: string;
+  nickname?: string;
+};
+
 // 로그인 응답 데이터
 export interface LoginData {
   accessToken: string;
   refreshToken: string;
-  user?: {
-    id: string;
-    email: string;
-    nickname?: string;
-  };
+  user?: User;
+}
+
+// 카카오 로그인 응답 데이터
+// TODO: 카카오 로그인 api 추가 되면 변경 될 수 있음
+export interface KakaoLoginData {
+  accessToken: string;
+  refreshToken: string;
+  user?: User;
 }

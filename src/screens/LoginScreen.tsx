@@ -18,6 +18,7 @@ import { useNavigation } from '@react-navigation/native';
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+
   const handleAppleLogin = async () => {
     console.log('Apple 로그인');
     // TODO: Apple 로그인 로직
@@ -28,9 +29,8 @@ const LoginScreen = () => {
     // TODO: Google 로그인 로직
   };
 
-  const handleKakaoLogin = async () => {
-    console.log('카카오 로그인');
-    // TODO: 카카오 로그인 로직
+  const handleKakaoLogin = () => {
+    navigation.navigate('KakaoLoginScreen' as never);
   };
 
   const handleNaverLogin = async () => {
